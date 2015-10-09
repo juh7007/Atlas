@@ -8,6 +8,12 @@ requirejs.config({
 			}
 		}
 	},
+	packages: [
+		{
+			name: "databindings",
+			location: "/circe/js/modules/databindings"
+		}
+	],
 	shim: {
 		"colorbrewer": {
 			exports: 'colorbrewer'
@@ -48,22 +54,22 @@ requirejs.config({
 		"analytics-manager": "components/analytics-manager",
 		"faceted-datatable": "components/faceted-datatable",
 		"profile-manager": "components/profile-manager",
-		"cohortbuilder": "http://rawgit.com/OHDSI/Circe/master/js/modules/cohortbuilder",
-		"webapi" : "http://rawgit.com/OHDSI/Circe/master/js/modules/WebAPIProvider",
 		"d3": "d3.min",
 		"d3_tip": "d3.tip",
 		"jnj_chart": "jnj.chart",
-		"lodash": "lodash.min"
+		"lodash": "lodash.min",
+		"cohortbuilder": "http://localhost/Circe/js/modules/cohortbuilder",
+		"webapi": "http://rawgit.com/OHDSI/Circe/master/js/modules/WebAPIProvider",
 	}
 });
 
-requirejs(['knockout', 'app', 'director','search'], function (ko, app) {
-	
+requirejs(['knockout', 'app', 'director', 'search'], function (ko, app) {
+
 	$('#splash').fadeIn();
 	var pageModel = new app();
 	window.pageModel = pageModel;
-	ko.applyBindings(pageModel);			
-	
+	ko.applyBindings(pageModel);
+
 	// establish base priorities for daimons
 	var evidencePriority = 0;
 	var vocabularyPriority = 0;
@@ -177,9 +183,9 @@ requirejs(['knockout', 'app', 'director','search'], function (ko, app) {
 		});
 	});
 
-	$.when.apply($, pageModel.initPromises).done(function () {	
+	$.when.apply($, pageModel.initPromises).done(function () {
 		pageModel.initComplete();
-	});	
+	});
 
 	pageModel.currentView.subscribe(function (newView) {
 		if (newView != 'splash') {
