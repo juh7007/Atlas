@@ -8,6 +8,12 @@ requirejs.config({
 			}
 		}
 	},
+	packages: [
+		{
+			name: "databindings",
+			location: "//rawgit.com/OHDSI/Circe/master/js/modules/databindings"
+		}
+	],	
 	shim: {
 		"colorbrewer": {
 			exports: 'colorbrewer'
@@ -22,10 +28,18 @@ requirejs.config({
 			exports: 'FacetEngine'
 		}
 	},
+	deps: ['jquery',
+				 'jquery-ui',
+				 'jqueryui/jquery.ui.autocomplete.scroll',
+				 'css!jqueryui/jquery.dataTables.css',
+				 'css!jqueryui/dataTables.colVis.css'
+	],
 	paths: {
 		"jquery": "http://code.jquery.com/jquery-1.11.2.min",
+		"jquery-ui": "jqueryui/jquery-ui.min",
 		"bootstrap": "https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min",
 		"text": "plugins/text",
+		"css": "plugins/css.min",
 		"knockout": "knockout.min",
 		"knockout-mapping": "knockout.mapping",
 		"knockout-persist": "knockout.persist",
@@ -51,7 +65,13 @@ requirejs.config({
 		"d3": "d3.min",
 		"d3_tip": "d3.tip",
 		"jnj_chart": "jnj.chart",
-		"lodash": "lodash.min"
+		"lodash": "lodash.min",
+		"cohortbuilder": "http://rawgit.com/OHDSI/Circe/master/js/modules/cohortbuilder",
+		"conceptsetbuilder": "http://rawgit.com/OHDSI/Circe/master/js/modules/conceptsetbuilder",
+		"conceptpicker": "http://rawgit.com/OHDSI/Circe/master/js/modules/conceptpicker",
+		"webapi" : "http://rawgit.com/OHDSI/Circe/master/js/modules/WebAPIProvider",
+		"vocabularyprovider": "http://rawgit.com/OHDSI/Circe/master/js/modules/WebAPIProvider/VocabularyProvider",
+		"appConfig" : "config"
 	}
 });
 
