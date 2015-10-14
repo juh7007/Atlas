@@ -2,7 +2,7 @@
 	<col width="100%" />
 	<tr>
 		<td style="vertical-align: top">
-			<div data-bind="if: model.currentCohortDefinition">
+			<div data-bind="if: model.currentCohortDefinition()">
 				<table>
 					<tbody>
 						<tr>
@@ -14,7 +14,7 @@
 								<!-- ko if: model.currentCohortDefinition().id() != null -->
 								<button class="button button-small button-flat-primary" data-bind="click: copy, enable: !dirtyFlag().isDirty()">Copy</button>
 								<!-- ko ifnot: isRunning -->
-								<button class="button button-small button-flat-caution" data-bind="click: $root.delete">Delete</button>
+								<button class="button button-small button-flat-caution" data-bind="click: $component.delete">Delete</button>
 								<!-- /ko -->
 								<!-- ko if: isRunning -->
 								<img class="spin" src="images/running.png" />Generating...

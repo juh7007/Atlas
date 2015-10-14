@@ -1,10 +1,13 @@
 define(['knockout',
 				'text!./atlas.cohort-editor.html',
 				'appConfig',
+				'cohortbuilder/CohortDefinition',
+				'webapi/CohortDefinitionAPI',
 				'cohortbuilder/components',
 				'conceptsetbuilder/components',
 				'knockout-jqueryui/tabs'
-], function (ko, view, config) {
+], function (ko, view, config, CohortDefinition, chortDefinitionAPI) {
+	
 	
 	function dirtyFlag(root, isInitiallyDirty) {
 		var result = function () {},
@@ -51,6 +54,34 @@ define(['knockout',
 	
 	function cohortEditor(params) {
 		var self = this;
+		
+		var pollTimeout = null;
+		
+		self.pollForInfo = function() {
+			if (pollTimeout)
+				clearTimeout(pollTimeout);
+
+			chortDefinitionAPI.getInfo(self.selectedDefinition().id()).then(function (infoList) {
+				var hasPending = false;
+				infoList.forEach(function (info) {
+					var source = self.sources().filter(function (s) {
+						return s.source.sourceId == info.id.sourceId
+					})[0];
+					if (source) {
+						source.info(info);
+						if (info.status != "COMPLETE")
+							hasPending = true;
+					}
+				});
+
+				if (hasPending) {
+					pollTimeout = setTimeout(function () {
+						pollForInfo();
+					}, 5000);
+				}
+			});
+		}
+		
 		self.model = params.model;
 		self.tabWidget = ko.observable();
 		self.conceptSetEditor = ko.observable();
@@ -158,8 +189,11 @@ define(['knockout',
 			chortDefinitionAPI.saveCohortDefinition(definition).then(function (result) {
 				console.log("Saved...");
 				result.expression = JSON.parse(result.expression);
-				var definition = new CohortDefinition(definition);
-				self.model.currentCohortDefinition(definition);
+				var definition = new CohortDefinition(result);
+				if (!definition.id)
+					document.location = "#/cohortdefinition/" + result.id;
+				else
+					self.model.currentCohortDefinition(definition);
 			});
 		}
 
@@ -167,9 +201,9 @@ define(['knockout',
 			clearTimeout(pollTimeout);
 
 			// reset view after save
-			chortDefinitionAPI.copyCohortDefinition(self.selectedDefinition().id()).then(function (result) {
+			chortDefinitionAPI.copyCohortDefinition(self.model.currentCohortDefinition().id()).then(function (result) {
 				console.log("Copied...");
-				self.open(result.id);
+				document.location = "#/cohortdefinition/" + result.id;
 			});
 		}
 
@@ -177,16 +211,9 @@ define(['knockout',
 			clearTimeout(pollTimeout);
 
 			// reset view after save
-			chortDefinitionAPI.deleteCohortDefinition(self.selectedDefinition().id()).then(function (result) {
+			chortDefinitionAPI.deleteCohortDefinition(self.model.currentCohortDefinition().id()).then(function (result) {
 				console.log("Deleted...");
-				self.refreshList().then(function () {
-					console.log("Refreshed...");
-					self.selectedDefinition(null);
-					self.sources().forEach(function (source) {
-						source.info(null);
-					});
-					self.router.setRoute("/");
-				});
+				document.location = "#/cohortdefinitions" 
 			});
 		}
 
@@ -197,22 +224,21 @@ define(['knockout',
 			});
 
 			self.dirtyFlag(new dirtyFlag(newDefinition, true));
-			self.selectedDefinition(newDefinition);
-			self.selectedView("detail");
+			self.model.currentCohortDefinition(newDefinition);
 			setTimeout(function () {
 				self.tabWidget().tabs("option", "active", 1); // index 1 is the Concept Set Tab.
 			}, 0);
 		}
 
 		self.onGenerate = function (generateComponent) {
-			var generatePromise = chortDefinitionAPI.generate(self.selectedDefinition().id(), generateComponent.source.sourceKey);
+			var generatePromise = chortDefinitionAPI.generate(self.model.currentCohortDefinition().id(), generateComponent.source.sourceKey);
 			generatePromise.then(function (result) {
 				pollForInfo();
 			});
 		}
 
 		self.getExpressionJSON = function () {
-			return ko.toJSON(self.selectedDefinition().Expression, pruneJSON, 2)
+			return ko.toJSON(self.model.currentCohortDefinition().Expression, pruneJSON, 2)
 		}
 	}
 
