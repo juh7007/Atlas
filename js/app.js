@@ -1181,13 +1181,13 @@ define([
 		self.evidence = ko.observableArray();
 		self.services = ko.observableArray([
 			{
-				name: 'HixBeta Multihomed',
-				url: 'http://hixbeta.jnj.com:8081/WebAPI/'
-			},
-			/*
-			{
 				name: 'Local',
 				url: 'http://localhost:8080/WebAPI/'
+			}
+			/*
+			{
+				name: 'HixBeta Multihomed',
+				url: 'http://hixbeta.jnj.com:8081/WebAPI/'
 			}
 			*/
 		]);

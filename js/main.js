@@ -12,6 +12,10 @@ requirejs.config({
 		{
 			name: "databindings",
 			location: "//rawgit.com/OHDSI/Circe/master/js/modules/databindings"
+		},
+		{
+			name: "cohortdefinitionviewer",
+			location: "//rawgit.com/OHDSI/Circe/master/js/modules/cohortdefinitionviewer"
 		}
 	],	
 	shim: {

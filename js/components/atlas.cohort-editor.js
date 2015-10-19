@@ -5,7 +5,8 @@ define(['knockout',
 				'webapi/CohortDefinitionAPI',
 				'cohortbuilder/components',
 				'conceptsetbuilder/components',
-				'knockout-jqueryui/tabs'
+				'knockout-jqueryui/tabs',
+				'cohortdefinitionviewer'
 ], function (ko, view, config, CohortDefinition, chortDefinitionAPI) {
 	
 	
