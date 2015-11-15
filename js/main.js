@@ -1,5 +1,5 @@
 requirejs.config({
-	//urlArgs: "bust=" + (new Date()).getTime(),
+	urlArgs: "bust=" + (new Date()).getTime(),
 	baseUrl: 'js',
 	config: {
 		text: {
@@ -79,7 +79,6 @@ requirejs.config({
 	}
 });
 
-// todo - remove overall requirements and move to route based lazy loaded requires
 requirejs(['knockout', 'app', 'director','search'], function (ko, app) {
 	
 	$('#splash').fadeIn();

@@ -12,6 +12,20 @@ define([
 	var appModel = function () {
 		$.support.cors = true;
 		var self = this;
+		
+		self.services = ko.observableArray([
+			/*
+			{
+				name: 'HixBeta Multihomed',
+				url: 'http://hixbeta.jnj.com:8081/WebAPI/'
+			},
+			*/
+			{
+				name: 'Local',
+				url: 'http://localhost:8080/WebAPI/'
+			}
+		]);
+		
 		$('#querytext').focus();
 
 		self.appInitializationFailed = ko.observable(false);
@@ -56,7 +70,7 @@ define([
 						});
 					},
 					'/reports': function () {
-						require(['report-manager'], function () {
+						require(['report-manager','cohort-definition-manager', 'cohort-definition-browser'], function () {
 							self.currentView('reports');
 						});
 					},
@@ -93,7 +107,7 @@ define([
 					'/search/:query:': function (query) {
 						require(['search'], function (search) {
 							self.currentView('search');
-							self.currentSearch(query);
+							self.currentSearchValue(unescape(query));
 						});
 					},
 					'/search': function () {
@@ -840,7 +854,7 @@ define([
 		};
 
 		self.renderCheckbox = function (field) {
-			return '<span data-bind="click: function(d) { d.' + field + '(!d.' + field + '()); pageModel.resolveConceptSetExpression(); } ,css: { selected: ' + field + '} " class="glyphicon glyphicon-ok"></span>';
+			return '<span data-bind="click: function(d) { d.' + field + '(!d.' + field + '()); pageModel.resolveConceptSetExpression(); } ,css: { selected: ' + field + '} " class="fa fa-check"></span>';
 		}
 
 		self.enableRecordCounts = ko.observable(true);
@@ -1159,6 +1173,7 @@ define([
 		self.recentSearch = ko.observableArray(null);
 		self.recentConcept = ko.observableArray(null);
 		self.currentSearch = ko.observable();
+		self.currentSearchValue = ko.observable();
 		self.currentView = ko.observable('splash');
 		self.conceptSetInclusionIdentifiers = ko.observableArray();
 		self.currentConceptSetExpressionJson = ko.observable();
